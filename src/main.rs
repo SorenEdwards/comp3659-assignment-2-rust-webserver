@@ -17,9 +17,9 @@ fn main() {
     println!("PORT: {}", port);
 
     let listener = TcpListener::bind("127.0.0.1:8080").unwrap();
-    let pool = ThreadPool::new(16);
+    let pool = ThreadPool::new(2);
 
-    for stream in listener.incoming().take(2) {
+    for stream in listener.incoming() {
         // pool.workers.
         let stream = stream.unwrap();
 
@@ -30,6 +30,7 @@ fn main() {
 
     println!("Shutting down.");
 }
+
 
 fn handle_connection(mut stream: TcpStream) {
     let mut buffer = [0; 1024];
