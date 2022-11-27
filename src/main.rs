@@ -60,7 +60,7 @@ fn handle_connection(mut stream: TcpStream) {
     let (status_line, filename) = if buffer.starts_with(get) {
         ("HTTP/1.1 200 OK", hello_html())
     } else if buffer.starts_with(sleep) {
-        thread::sleep(Duration::from_millis(500));
+        thread::sleep(Duration::from_millis(1000));
         ("HTTP/1.1 200 OK", sleep_html())
     } else {
         ("HTTP/1.1 404 NOT FOUND", error_html())
