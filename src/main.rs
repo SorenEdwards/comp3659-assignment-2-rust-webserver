@@ -58,6 +58,7 @@ fn handle_connection(mut stream: TcpStream) {
     let sleep = b"GET /sleep HTTP/1.1\r\n";
 
     let (status_line, filename) = if buffer.starts_with(get) {
+        //thread::sleep(Duration::from_millis(1000));
         ("HTTP/1.1 200 OK", hello_html())
     } else if buffer.starts_with(sleep) {
         thread::sleep(Duration::from_millis(1000));
