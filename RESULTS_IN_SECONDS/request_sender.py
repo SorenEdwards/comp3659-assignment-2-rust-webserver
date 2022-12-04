@@ -6,8 +6,6 @@ import time
 import csv
 from variables import *
 
-
-
 # field names
 fields = ['RANGE OF', 'REQUEST', 'NUMBER', 'STATUS CODE', 'END_TIME', 'START_TIME', 'TOTAL_TIME']
 
@@ -36,13 +34,13 @@ def threaded_send_requests(ran,list):
 results = []
 req_times = []
 
+
 for n in RANGES:
     start = time.time()
     threaded_send_requests(n,results)
     end = time.time()
     req_times.append(end-start)
     print(end-start)
-     
 
 with open('16thread_nosleep_times.csv', mode='w') as csv_file:
     # using csv.writer method from CSV package

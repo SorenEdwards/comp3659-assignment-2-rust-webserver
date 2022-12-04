@@ -6,7 +6,10 @@ import statistics as stats
 
 plt.style.use('dark_background')
 
-graph = int(input('What would you like to graph?\n1. Low Threads 1 Second Sleep\n2. High Threads 1 Second Sleep\n'))
+print('What would you like to graph?\n1. Low Threads 1 Second Sleep\n2. High Threads 1 Second Sleep\n\
+3. Speedup from doubling low threads\n4. Speedup from doubling high threads\n5. Time of Requests With No Sleep\n\
+6. Single thread with pool vs no pool')
+graph = int(input())
 
 def unpack_csv(filename):
     test_range,status_codes,start_time,end_time,request_leng = np.loadtxt(filename,unpack = True, delimiter= ',')
@@ -41,37 +44,36 @@ req_times512 = unpack_csv_times('512thread_sleep_times.csv')
 req_times1024 = unpack_csv_times('1024thread_sleep_times.csv')
 req_times2048 = unpack_csv_times('2048thread_sleep_times.csv')
 req_times4096 = unpack_csv_times('4096thread_sleep_times.csv')
-
+#Unpacking thread csv times with no sleep into arrays
 nosleep_req_times1= unpack_csv_times('1thread_nosleep_times.csv')
 nosleep_req_times2= unpack_csv_times('2thread_nosleep_times.csv')
 nosleep_req_times4= unpack_csv_times('4thread_nosleep_times.csv')
 nosleep_req_times8= unpack_csv_times('8thread_nosleep_times.csv')
 nosleep_req_times16= unpack_csv_times('16thread_nosleep_times.csv')
-
-
-
-
+#For graph 1
 tot_times_high = [req_times1[2],req_times2[2],req_times4[2],req_times8[2],req_times16[2]]
 tot_times_med = [req_times1[1],req_times2[1],req_times4[1],req_times8[1],req_times16[1]]
 tot_times_low = [req_times1[0],req_times2[0],req_times4[0],req_times8[0],req_times16[0]]
-
+#For graph 5
 nosleep_tot_times_high = [nosleep_req_times1[2],nosleep_req_times2[2],nosleep_req_times4[2],nosleep_req_times8[2],nosleep_req_times16[2]]
 nosleep_tot_times_med = [nosleep_req_times1[1],nosleep_req_times2[1],nosleep_req_times4[1],nosleep_req_times8[1],nosleep_req_times16[1]]
 nosleep_tot_times_low = [nosleep_req_times1[0],nosleep_req_times2[0],nosleep_req_times4[0],nosleep_req_times8[0],nosleep_req_times16[0]]
-
+#For graph 2
 tot_times_high2 = [req_times256[2],req_times512[2],req_times1024[2],req_times2048[2],req_times4096[2]]
 tot_times_med2 = [req_times256[1],req_times512[1],req_times1024[1],req_times2048[1],req_times4096[1]]
 tot_times_low2 = [req_times256[0],req_times512[0],req_times1024[0],req_times2048[0],req_times4096[0]]
-
-
-
+#For graph 3
 performance_increase1 = [req_times1[2]/req_times2[2],req_times2[2]/req_times4[2], req_times4[2]/req_times8[2],req_times8[2]/req_times16[2]]
+#For graph 4
 performance_increase2 = [req_times256[2]/req_times512[2],req_times512[2]/req_times1024[2], req_times1024[2]/req_times2048[2], req_times2048[2]/req_times4096[2]]
+#for graph 6
+pool_vs_nopool = [nopool_req_times[2], req_times1[2]]
 
 threads = [1,2,4,8,16]
 threads2 = [256,512,1024,2048,4096]
 performance = ['1-2', '2-4', '4-8','8-16']
 performance2 = ['256-512', '512-1024', '1024-2048', '2048-4096']
+no_pool_graph = ['No thread pool', 'With thread pool']
 
 
 if graph == 1:
@@ -119,6 +121,7 @@ elif graph == 4:
     plt.xlabel('Thread Jump')
     plt.ylabel('Speedup')
 elif graph == 5:
+    #Time of requests with no sleep
      x_indexes = np.arange(len(threads))
      plt.bar(x_indexes -0.25,nosleep_tot_times_high, width = 0.25, label = '100 000 Requests')
      plt.bar(x_indexes, nosleep_tot_times_med, width = 0.25, label = '50 000 requests')
@@ -129,6 +132,18 @@ elif graph == 5:
      plt.xlabel('Threads')
      plt.ylabel('Seconds')
      plt.legend()
+elif graph == 6:
+    #Pool vs No pool graph
+     x_indexes = np.arange(len(no_pool_graph))
+     plt.bar(x_indexes, pool_vs_nopool,width = 0.5)
+     plt.xticks(ticks = x_indexes, labels = no_pool_graph)
+     plt.title('Time of 100 Reqeusts With Sleep')
+     plt.xlabel('Thread Pool')
+     plt.ylabel('Seconds')
+     plt.legend()
+
+    
+
 
 
 
